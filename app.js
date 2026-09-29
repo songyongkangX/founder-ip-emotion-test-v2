@@ -232,18 +232,59 @@ function renderResults() {
 }
 function answerText(index) { const selection = answers[index]; return selection.length ? selection.map(answer => questions[index][2][answer][0]).join('、') : '未填写'; }
 function ensureResultLayout() { const description = document.querySelector('.intro-description'); const note = document.querySelector('.micro-note'); if (description) description.textContent = '用情绪表达做爆款，用信任表达做成交。10 分钟找到属于你的情绪配方、内容比例和可直接执行的视频方向。'; if (note) note.textContent = '15 题 · 约 10 分钟 · 单选与多选'; const homeShare = $('shareTestButton'); const resultShare = $('shareResultButton'); const shareModal = $('shareModal'); if (homeShare) homeShare.remove(); if (resultShare) resultShare.remove(); if (shareModal) shareModal.remove(); const saveButton = $('saveImageButton'); const resultActions = document.querySelector('.result-actions'); if (saveButton && resultActions && !resultActions.contains(saveButton)) resultActions.prepend(saveButton); if (!$('dominantResult') && $('resultCard')) $('resultCard').insertAdjacentHTML('beforebegin', '<div id="dominantResult" class="dominant-result"><div class="dominant-orb"><span id="dominantEmotion">怒</span><small>主情绪</small></div><div class="dominant-copy"><p class="eyebrow">YOUR DOMINANT SIGNAL</p><h3><strong id="dominantType">立场型</strong>人格</h3><p id="dominantSummary">你最适合用清晰的立场和边界，让用户迅速记住你。</p><div class="dominant-meta"><span id="dominantScore">得分 0</span><span id="dominantFrequency">每周 1–2 条</span></div></div><div class="dominant-badge">TOP<br><strong>01</strong></div></div>'); }
-function downloadResult() { const canvas = document.createElement('canvas'); canvas.width = 1200; canvas.height = 760; const context = canvas.getContext('2d'); context.fillStyle = '#202320'; context.fillRect(0, 0, canvas.width, canvas.height); context.fillStyle = '#d8ef72'; context.fillRect(70, 72, 95, 10); context.fillStyle = '#f4f1ea'; context.font = '700 24px sans-serif'; context.fillText('FOUNDER IP PROFILE', 70, 145); context.font = '600 58px serif'; context.fillText($('resultTitle').textContent, 70, 215); context.fillStyle = '#aeb3a9'; context.font = '20px sans-serif'; context.fillText($('resultSubtitle').textContent, 70, 255); const rows = [...document.querySelectorAll('.score-bar-row')]; rows.forEach((row, index) => { const y = 335 + index * 38; context.fillStyle = '#f4f1ea'; context.font = '700 18px sans-serif'; context.fillText(row.children[0].textContent, 75, y); context.fillStyle = '#424940'; context.fillRect(125, y - 14, 700, 11); context.fillStyle = '#d8ef72'; context.fillRect(125, y - 14, 700 * parseFloat(row.children[1].firstElementChild.style.width) / 100, 11); context.fillStyle = '#aeb3a9'; context.font = '16px sans-serif'; context.fillText(row.children[2].textContent, 850, y); }); context.fillStyle = '#ff795f'; context.font = '700 22px sans-serif'; context.fillText('内容配比  60% + 25% + 15%', 70, 680); context.fillStyle = '#aeb3a9'; context.font = '16px sans-serif'; context.fillText('创始人 IP 情绪风格测评 · 保存于你的内容档案', 70, 720); const link = document.createElement('a'); link.download = '创始人IP情绪风格测评结果.png'; link.href = canvas.toDataURL('image/png'); link.click(); }
-
 function downloadResult() {
-  const canvas = document.createElement('canvas'); canvas.width = 1400; canvas.height = 1780; const context = canvas.getContext('2d'); const ranked = calculate(); const primary = ranked[0][0];
-  const rounded = (x, y, width, height, radius, fill, stroke) => { context.beginPath(); context.roundRect(x, y, width, height, radius); context.fillStyle = fill; context.fill(); if (stroke) { context.strokeStyle = stroke; context.stroke(); } };
-  const wrapped = (text, x, y, width, lineHeight, color, font) => { context.fillStyle = color; context.font = font; let line = ''; let cursorY = y; [...text].forEach(character => { const next = line + character; if (context.measureText(next).width > width && line) { context.fillText(line, x, cursorY); line = character; cursorY += lineHeight; } else line = next; }); if (line) context.fillText(line, x, cursorY); return cursorY; };
-  context.fillStyle = '#f6f1fb'; context.fillRect(0, 0, canvas.width, canvas.height); context.fillStyle = '#e7d7ff'; context.fillRect(0, 0, canvas.width, 290); context.fillStyle = '#6d43d9'; context.fillRect(82, 75, 118, 12); context.fillStyle = '#211b32'; context.font = '700 24px sans-serif'; context.fillText('FOUNDER IP / EMOTIONAL POSITIONING', 82, 135); context.font = '600 58px serif'; context.fillText('创始人 IP 情绪风格报告', 82, 210); context.fillStyle = '#777083'; context.font = '20px sans-serif'; context.fillText('用情绪表达做爆款，用信任表达做成交。', 84, 252);
-  rounded(70, 330, 1260, 310, 28, '#2b1d43'); context.fillStyle = '#d9f47b'; context.font = '700 18px sans-serif'; context.fillText('YOUR DOMINANT SIGNAL · TOP 01', 110, 390); context.fillStyle = '#ffffff'; context.font = '600 70px serif'; context.fillText(`${primary}型人格`, 110, 480); wrapped(`${emotions[primary].advice}。你的内容首先要让用户感受到${emotions[primary].purpose.replace('建立人设、', '').replace('、替用户说话', '')}。`, 112, 535, 760, 34, '#ded1ea', '20px sans-serif'); context.fillStyle = '#d9f47b'; context.beginPath(); context.arc(1160, 470, 105, 0, Math.PI * 2); context.fill(); context.fillStyle = '#2b1d43'; context.textAlign = 'center'; context.font = '700 74px serif'; context.fillText(primary, 1160, 490); context.font = '16px sans-serif'; context.fillText(`${emotions[primary].type} · 得分 ${ranked[0][1]}`, 1160, 530); context.textAlign = 'left';
-  context.fillStyle = '#777083'; context.font = '700 16px sans-serif'; context.fillText('七情绪分布 · 从高到低', 82, 705); ranked.forEach(([emotion, score], index) => { const y = 765 + index * 45; context.fillStyle = '#211b32'; context.font = '700 19px sans-serif'; context.fillText(`${String(index + 1).padStart(2, '0')}  ${emotion}`, 90, y); rounded(230, y - 18, 760, 14, 7, '#e1d9eb'); rounded(230, y - 18, Math.max(25, 760 * score / (ranked[0][1] || 1)), 14, 7, index === 0 ? '#6d43d9' : '#b175d8'); context.fillStyle = '#777083'; context.font = '16px sans-serif'; context.fillText(`${score} · ${emotions[emotion].type}`, 1030, y); });
-  rounded(70, 1135, 600, 270, 22, '#ffffff', '#ded6ea'); rounded(700, 1135, 630, 270, 22, '#ffffff', '#ded6ea'); context.fillStyle = '#6d43d9'; context.font = '700 15px sans-serif'; context.fillText('CONTENT DIRECTION', 105, 1185); context.fillStyle = '#211b32'; context.font = '600 29px serif'; context.fillText('内容配比', 105, 1235); context.font = '700 22px sans-serif'; context.fillText(`${primary} 60% + ${ranked[1][0]} 25% + ${ranked[2][0]} 15%`, 105, 1290); wrapped(`主情绪：${emotions[primary].advice}。辅助情绪：${emotions[ranked[1][0]].advice}。`, 105, 1345, 500, 28, '#777083', '17px sans-serif'); context.fillStyle = '#6d43d9'; context.font = '700 15px sans-serif'; context.fillText('ACTION NOTES', 735, 1185); context.fillStyle = '#211b32'; context.font = '600 29px serif'; context.fillText('下一步这样拍', 735, 1235); wrapped(`主推类型：${emotions[primary].type}。${emotions[primary].purpose}。${emotions[primary].frequency}。`, 735, 1290, 520, 28, '#777083', '17px sans-serif');
-  context.fillStyle = '#777083'; context.font = '700 15px sans-serif'; context.fillText('IP 情绪风格档案卡', 82, 1500); const profileRows = [...document.querySelectorAll('.profile-item')].slice(0, 9); profileRows.forEach((item, index) => { const x = 82 + (index % 3) * 425; const y = 1540 + Math.floor(index / 3) * 62; context.fillStyle = '#777083'; context.font = '13px sans-serif'; context.fillText(item.querySelector('span').textContent, x, y); context.fillStyle = '#211b32'; context.font = '600 16px sans-serif'; context.fillText(item.querySelector('strong').textContent.slice(0, 22), x, y + 26); }); context.fillStyle = '#aaa0b4'; context.font = '14px sans-serif'; context.fillText('创始人 IP 情绪风格测评 · 结果报告', 82, 1740);
-  const link = document.createElement('a'); link.download = '创始人IP情绪风格完整结果报告.png'; link.href = canvas.toDataURL('image/png'); link.click();
+  const result = $('resultView');
+  if (!result) return;
+
+  const bounds = result.getBoundingClientRect();
+  const width = Math.ceil(result.scrollWidth || bounds.width);
+  const height = Math.ceil(Math.max(result.scrollHeight, bounds.height));
+  if (!width || !height) return;
+
+  const styles = [...document.styleSheets].map(sheet => {
+    try {
+      return [...sheet.cssRules].map(rule => rule.cssText).join('\n');
+    } catch (error) {
+      return '';
+    }
+  }).join('\n');
+  const clone = result.cloneNode(true);
+  clone.classList.remove('hidden');
+  clone.style.width = `${width}px`;
+  clone.style.height = `${height}px`;
+  clone.style.maxWidth = 'none';
+  clone.style.margin = '0';
+  clone.style.animation = 'none';
+
+  const bodyStyle = getComputedStyle(document.body);
+  const exportRoot = document.createElement('div');
+  exportRoot.style.cssText = `width:${width}px;height:${height}px;overflow:hidden;color:${bodyStyle.color};font-family:${bodyStyle.fontFamily};background:${bodyStyle.background};`;
+  exportRoot.append(clone);
+
+  const serialized = new XMLSerializer().serializeToString(exportRoot);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject width="100%" height="100%"><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml"><xhtml:style>${styles}</xhtml:style>${serialized}</xhtml:div></foreignObject></svg>`;
+  const image = new Image();
+  const objectUrl = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
+  image.onload = () => {
+    const scale = Math.min(2, 8192 / width, 8192 / height);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.floor(width * scale));
+    canvas.height = Math.max(1, Math.floor(height * scale));
+    const context = canvas.getContext('2d');
+    context.fillStyle = bodyStyle.backgroundColor || '#f5f1fa';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    URL.revokeObjectURL(objectUrl);
+    const link = document.createElement('a');
+    link.download = '创始人IP情绪风格完整结果报告.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+  image.onerror = () => {
+    URL.revokeObjectURL(objectUrl);
+    showToast('图片生成失败，请稍后重试');
+  };
+  image.src = objectUrl;
 }
 
 ensureResultLayout(); $('startButton').addEventListener('click', () => { current = 0; answers = Array.from({ length: questions.length }, () => []); show('quizView'); $('headerStatus').textContent = '正在测评'; renderQuestion(); }); $('prevButton').addEventListener('click', () => { if (current > 0) { current--; renderQuestion(); } }); $('nextButton').addEventListener('click', () => { if (current < questions.length - 1) { current++; renderQuestion(); } else { renderResults(); show('resultView'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }); $('restartButton').addEventListener('click', () => { show('introView'); $('headerStatus').textContent = '准备开始'; window.history.replaceState({}, '', window.location.pathname); window.scrollTo({ top: 0, behavior: 'smooth' }); }); $('saveImageButton').addEventListener('click', downloadResult); loadSharedResult();
