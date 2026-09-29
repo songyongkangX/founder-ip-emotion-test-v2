@@ -260,17 +260,4 @@ function refreshIntroCopy() {
   if (note) note.textContent = '33 题 · 约 10 分钟 · 含 2 题可选';
 }
 
-function ensureShareAction() {
-  const resultActions = document.querySelector('.result-actions');
-  const restartButton = $('restartButton');
-  if (!resultActions || !restartButton || $('shareResultButton')) return;
-  const shareButton = document.createElement('button');
-  shareButton.id = 'shareResultButton';
-  shareButton.className = 'button button-ghost';
-  shareButton.innerHTML = '分享我的结果 <span>↗</span>';
-  shareButton.addEventListener('click', () => shareUrl(makeShareUrl(true), '这是我的创始人 IP 情绪风格测评结果，打开链接即可查看。'));
-  resultActions.insertBefore(shareButton, restartButton);
-}
-
 refreshIntroCopy();
-ensureShareAction();
