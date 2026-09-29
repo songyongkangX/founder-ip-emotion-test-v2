@@ -256,7 +256,7 @@ function refreshIntroCopy() {
     legacyFrequency.id = 'dominantPurpose';
     legacyFrequency.textContent = '';
   }
-  if (description) description.textContent = '用情绪表达做爆款，让更多人看到你；用信任表达做成交，让更多人选择你。通过 MBTI、七情情绪和用户画像，找到适合你的短视频表达风格与拍摄方向。';
+  if (description) description.innerHTML = '用情绪表达做爆款，让更多人看到你<br>用信任表达做成交，让更多人选择你<br>通过 MBTI、七情情绪和用户画像，找到适合你的短视频表达风格与拍摄方向';
   if (note) note.textContent = '33 题 · 约 10 分钟 · 含 2 题可选';
 }
 
