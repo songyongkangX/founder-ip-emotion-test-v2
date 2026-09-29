@@ -233,18 +233,24 @@ function renderResults() {
 function answerText(index) { const selection = answers[index]; return selection.length ? selection.map(answer => questions[index][2][answer][0]).join('、') : '未填写'; }
 function ensureResultLayout() { const description = document.querySelector('.intro-description'); const note = document.querySelector('.micro-note'); if (description) description.textContent = '用情绪表达做爆款，用信任表达做成交。10 分钟找到属于你的情绪配方、内容比例和可直接执行的视频方向。'; if (note) note.textContent = '15 题 · 约 10 分钟 · 单选与多选'; const homeShare = $('shareTestButton'); const resultShare = $('shareResultButton'); const shareModal = $('shareModal'); if (homeShare) homeShare.remove(); if (resultShare) resultShare.remove(); if (shareModal) shareModal.remove(); const saveButton = $('saveImageButton'); const resultActions = document.querySelector('.result-actions'); if (saveButton && resultActions && !resultActions.contains(saveButton)) resultActions.prepend(saveButton); if (!$('dominantResult') && $('resultCard')) $('resultCard').insertAdjacentHTML('beforebegin', '<div id="dominantResult" class="dominant-result"><div class="dominant-orb"><span id="dominantEmotion">怒</span><small>主情绪</small></div><div class="dominant-copy"><p class="eyebrow">YOUR DOMINANT SIGNAL</p><h3><strong id="dominantType">立场型</strong>人格</h3><p id="dominantSummary">你最适合用清晰的立场和边界，让用户迅速记住你。</p><div class="dominant-meta"><span id="dominantScore">得分 0</span><span id="dominantFrequency">每周 1–2 条</span></div></div><div class="dominant-badge">TOP<br><strong>01</strong></div></div>'); }
 function saveCanvasAsPng(canvas) {
-  try {
-    const link = document.createElement('a');
-    link.download = '创始人IP情绪风格完整结果报告.png';
-    link.href = canvas.toDataURL('image/png');
-    document.body.append(link);
-    link.click();
-    link.remove();
-    return true;
-  } catch (error) {
-    console.error('保存结果图片失败', error);
-    return false;
-  }
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => {
+      if (!blob) {
+        resolve(false);
+        return;
+      }
+
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = '创始人IP情绪风格完整结果报告.png';
+      link.href = objectUrl;
+      document.body.append(link);
+      link.click();
+      window.setTimeout(() => link.remove(), 1000);
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+      resolve(true);
+    }, 'image/png');
+  });
 }
 
 function renderResultWithSvg(result, width, height, scale) {
@@ -329,7 +335,7 @@ async function downloadResult() {
           }
         }
       });
-      if (saveCanvasAsPng(canvas)) return;
+      if (await saveCanvasAsPng(canvas)) return;
     }
   } catch (error) {
     console.warn('html2canvas 导出失败，尝试 SVG 兜底', error);
@@ -337,7 +343,7 @@ async function downloadResult() {
 
   try {
     const canvas = await renderResultWithSvg(result, width, height, scale);
-    if (saveCanvasAsPng(canvas)) return;
+    if (await saveCanvasAsPng(canvas)) return;
   } catch (error) {
     console.error('结果图片导出失败', error);
   }
@@ -354,7 +360,7 @@ function refreshIntroCopy() {
     legacyFrequency.id = 'dominantPurpose';
     legacyFrequency.textContent = '';
   }
-  if (description) description.innerHTML = '用情绪表达做爆款，让更多人看到你<br>用信任表达做成交，让更多人选择你<br>通过 MBTI、七情情绪和用户画像，找到适合你的短视频表达风格与拍摄方向';
+  if (description) description.innerHTML = '用情绪表达做爆款，让更多人看到你<br>用信任表达做成交，让更多人选择你<br>通过 MBTI、七情情绪和用户画像<br>找到最适合你的短视频表达风格与拍摄方向';
   if (note) note.textContent = '33 题 · 约 10 分钟 · 含 2 题可选';
 }
 
