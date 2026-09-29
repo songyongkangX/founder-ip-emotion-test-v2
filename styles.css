@@ -163,6 +163,7 @@ body.modal-open { overflow: hidden; }
 }
 .intro-copy > .eyebrow { grid-area: eyebrow; align-self: end; margin: 0 0 20px; }
 .intro-copy h1 { grid-area: title; max-width: 650px; margin: 0; font-size: clamp(46px, 5.2vw, 72px); line-height: 1.16; letter-spacing: -.035em; }
+.intro-copy h1 em { display: block; white-space: nowrap; font-size: clamp(30px, 3.8vw, 42px); }
 .intro-description { grid-area: description; max-width: 535px; margin: 26px 0 28px; color: #625a6b; font-size: 15px; line-height: 1.9; }
 .intro-actions { grid-area: actions; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; width: min(100%, 330px); }
 .intro-actions > .button-primary { width: min(100%, 290px) !important; min-width: 0; padding: 16px 24px; }
@@ -191,16 +192,18 @@ body.modal-open { overflow: hidden; }
       "eyebrow"
       "title"
       "description"
-      "actions"
-      "orbit";
+      "orbit"
+      "actions";
     justify-items: center;
     row-gap: 0;
     max-width: 560px;
   }
   .intro-copy > .eyebrow { align-self: auto; margin-bottom: 16px; text-align: center; }
   .intro-copy h1 { max-width: 100%; font-size: clamp(38px, 10vw, 52px); line-height: 1.2; text-align: center; letter-spacing: -.025em; }
+  .intro-copy h1 em { font-size: clamp(30px, 8.5vw, 38px); }
   .intro-description { max-width: 510px; margin: 18px auto 22px; font-size: 13px; line-height: 1.75; text-align: center; }
   .intro-actions { width: 100%; gap: 8px; }
+  .intro-actions { margin-top: 4px; }
   .intro-actions > .button-primary { width: min(82vw, 300px) !important; }
   .intro-orbit {
     width: 100% !important;
