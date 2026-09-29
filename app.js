@@ -232,7 +232,74 @@ function renderResults() {
 }
 function answerText(index) { const selection = answers[index]; return selection.length ? selection.map(answer => questions[index][2][answer][0]).join('、') : '未填写'; }
 function ensureResultLayout() { const description = document.querySelector('.intro-description'); const note = document.querySelector('.micro-note'); if (description) description.textContent = '用情绪表达做爆款，用信任表达做成交。10 分钟找到属于你的情绪配方、内容比例和可直接执行的视频方向。'; if (note) note.textContent = '15 题 · 约 10 分钟 · 单选与多选'; const homeShare = $('shareTestButton'); const resultShare = $('shareResultButton'); const shareModal = $('shareModal'); if (homeShare) homeShare.remove(); if (resultShare) resultShare.remove(); if (shareModal) shareModal.remove(); const saveButton = $('saveImageButton'); const resultActions = document.querySelector('.result-actions'); if (saveButton && resultActions && !resultActions.contains(saveButton)) resultActions.prepend(saveButton); if (!$('dominantResult') && $('resultCard')) $('resultCard').insertAdjacentHTML('beforebegin', '<div id="dominantResult" class="dominant-result"><div class="dominant-orb"><span id="dominantEmotion">怒</span><small>主情绪</small></div><div class="dominant-copy"><p class="eyebrow">YOUR DOMINANT SIGNAL</p><h3><strong id="dominantType">立场型</strong>人格</h3><p id="dominantSummary">你最适合用清晰的立场和边界，让用户迅速记住你。</p><div class="dominant-meta"><span id="dominantScore">得分 0</span><span id="dominantFrequency">每周 1–2 条</span></div></div><div class="dominant-badge">TOP<br><strong>01</strong></div></div>'); }
-function downloadResult() {
+function saveCanvasAsPng(canvas) {
+  try {
+    const link = document.createElement('a');
+    link.download = '创始人IP情绪风格完整结果报告.png';
+    link.href = canvas.toDataURL('image/png');
+    document.body.append(link);
+    link.click();
+    link.remove();
+    return true;
+  } catch (error) {
+    console.error('保存结果图片失败', error);
+    return false;
+  }
+}
+
+function renderResultWithSvg(result, width, height, scale) {
+  return new Promise((resolve, reject) => {
+    const styles = [...document.styleSheets].map(sheet => {
+      try {
+        return [...sheet.cssRules].map(rule => rule.cssText).join('\n');
+      } catch (error) {
+        return '';
+      }
+    }).join('\n');
+    const clone = result.cloneNode(true);
+    clone.classList.remove('hidden');
+    clone.style.width = `${width}px`;
+    clone.style.height = `${height}px`;
+    clone.style.maxWidth = 'none';
+    clone.style.margin = '0';
+    clone.style.animation = 'none';
+
+    const bodyStyle = getComputedStyle(document.body);
+    const exportRoot = document.createElement('div');
+    exportRoot.style.cssText = `width:${width}px;height:${height}px;overflow:hidden;color:${bodyStyle.color};font-family:${bodyStyle.fontFamily};background:${bodyStyle.background};`;
+    exportRoot.append(clone);
+    const serialized = new XMLSerializer().serializeToString(exportRoot);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject width="100%" height="100%"><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml"><xhtml:style>${styles}</xhtml:style>${serialized}</xhtml:div></foreignObject></svg>`;
+    const image = new Image();
+    const objectUrl = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
+    const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    let usingDataUrl = false;
+    const cleanup = () => URL.revokeObjectURL(objectUrl);
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.floor(width * scale));
+      canvas.height = Math.max(1, Math.floor(height * scale));
+      const context = canvas.getContext('2d');
+      context.fillStyle = bodyStyle.backgroundColor || '#f5f1fa';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      cleanup();
+      resolve(canvas);
+    };
+    image.onerror = () => {
+      if (!usingDataUrl) {
+        usingDataUrl = true;
+        image.src = dataUrl;
+        return;
+      }
+      cleanup();
+      reject(new Error('SVG foreignObject 导出失败'));
+    };
+    image.src = objectUrl;
+  });
+}
+
+async function downloadResult() {
   const result = $('resultView');
   if (!result) return;
 
@@ -240,51 +307,41 @@ function downloadResult() {
   const width = Math.ceil(result.scrollWidth || bounds.width);
   const height = Math.ceil(Math.max(result.scrollHeight, bounds.height));
   if (!width || !height) return;
+  const scale = Math.min(2, 8192 / width, 8192 / height);
 
-  const styles = [...document.styleSheets].map(sheet => {
-    try {
-      return [...sheet.cssRules].map(rule => rule.cssText).join('\n');
-    } catch (error) {
-      return '';
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    if (typeof window.html2canvas === 'function') {
+      const canvas = await window.html2canvas(result, {
+        backgroundColor: '#f5f1fa',
+        scale,
+        width,
+        height,
+        useCORS: true,
+        allowTaint: false,
+        logging: false,
+        onclone: clonedDocument => {
+          const clonedResult = clonedDocument.getElementById('resultView');
+          if (clonedResult) {
+            clonedResult.classList.remove('hidden');
+            clonedResult.style.height = 'auto';
+            clonedResult.style.animation = 'none';
+          }
+        }
+      });
+      if (saveCanvasAsPng(canvas)) return;
     }
-  }).join('\n');
-  const clone = result.cloneNode(true);
-  clone.classList.remove('hidden');
-  clone.style.width = `${width}px`;
-  clone.style.height = `${height}px`;
-  clone.style.maxWidth = 'none';
-  clone.style.margin = '0';
-  clone.style.animation = 'none';
+  } catch (error) {
+    console.warn('html2canvas 导出失败，尝试 SVG 兜底', error);
+  }
 
-  const bodyStyle = getComputedStyle(document.body);
-  const exportRoot = document.createElement('div');
-  exportRoot.style.cssText = `width:${width}px;height:${height}px;overflow:hidden;color:${bodyStyle.color};font-family:${bodyStyle.fontFamily};background:${bodyStyle.background};`;
-  exportRoot.append(clone);
-
-  const serialized = new XMLSerializer().serializeToString(exportRoot);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject width="100%" height="100%"><xhtml:div xmlns:xhtml="http://www.w3.org/1999/xhtml"><xhtml:style>${styles}</xhtml:style>${serialized}</xhtml:div></foreignObject></svg>`;
-  const image = new Image();
-  const objectUrl = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
-  image.onload = () => {
-    const scale = Math.min(2, 8192 / width, 8192 / height);
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.max(1, Math.floor(width * scale));
-    canvas.height = Math.max(1, Math.floor(height * scale));
-    const context = canvas.getContext('2d');
-    context.fillStyle = bodyStyle.backgroundColor || '#f5f1fa';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    URL.revokeObjectURL(objectUrl);
-    const link = document.createElement('a');
-    link.download = '创始人IP情绪风格完整结果报告.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  };
-  image.onerror = () => {
-    URL.revokeObjectURL(objectUrl);
-    showToast('图片生成失败，请稍后重试');
-  };
-  image.src = objectUrl;
+  try {
+    const canvas = await renderResultWithSvg(result, width, height, scale);
+    if (saveCanvasAsPng(canvas)) return;
+  } catch (error) {
+    console.error('结果图片导出失败', error);
+  }
+  showToast('图片生成失败，请检查浏览器下载权限后重试');
 }
 
 ensureResultLayout(); $('startButton').addEventListener('click', () => { current = 0; answers = Array.from({ length: questions.length }, () => []); show('quizView'); $('headerStatus').textContent = '正在测评'; renderQuestion(); }); $('prevButton').addEventListener('click', () => { if (current > 0) { current--; renderQuestion(); } }); $('nextButton').addEventListener('click', () => { if (current < questions.length - 1) { current++; renderQuestion(); } else { renderResults(); show('resultView'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }); $('restartButton').addEventListener('click', () => { show('introView'); $('headerStatus').textContent = '准备开始'; window.history.replaceState({}, '', window.location.pathname); window.scrollTo({ top: 0, behavior: 'smooth' }); }); $('saveImageButton').addEventListener('click', downloadResult); loadSharedResult();
