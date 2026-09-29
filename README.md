@@ -19,7 +19,7 @@ python3 -m http.server 4173
 
 ## 分享链接
 
-完成测评后点击“分享我的结果”，会复制或系统分享当前结果链接：
+外部结果链接支持通过 URL 参数直接打开结果页：
 
 ```text
 https://你的域名.com/?answers=x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x
