@@ -8,6 +8,94 @@ const emotions = {
   欲: { type: '向往型', purpose: '制造渴望、品牌片', advice: '展示理想结果，让用户看见想成为的自己', frequency: '每月 1 条' }
 };
 
+const emotionGuides = {
+  喜: { essence: '希望被验证', trigger: '她能做到，我也可以', peak: '我当初也不信，直到……', style: '轻快、松弛、有节奏', scene: '明亮色系、简约大方、暖光明亮', format: '亮结果 → 说来源 → 给希望' },
+  怒: { essence: '边界被侵犯后的反击', trigger: '她替我说了我不敢说的', peak: '你也可以学会说不', style: '坚定、直接、不拖沓', scene: '深色系、干练利落、中性冷光', format: '亮态度 → 说原因 → 亮底线' },
+  哀: { essence: '真实地被看见', trigger: '我也经历过，我懂', peak: '我怎么走出来的', style: '柔和、真实、有停顿', scene: '暖色偏暗、舒适居家、暖光偏暗', format: '低谷 → 感受 → 转折 → 感悟' },
+  惧: { essence: '对失去的警觉', trigger: '再不改变就晚了', peak: '现在做还来得及', style: '紧凑、严肃、有压迫', scene: '深色系、干练专业、中性偏冷', format: '抛痛点 → 放大后果 → 给方向' },
+  爱: { essence: '无条件地看见对方', trigger: '你把我当人看', peak: '不管怎样，我都在', style: '温柔、亲切、像聊天', scene: '柔和暖色、舒适温暖、暖光柔和', format: '回应问题 → 给方法 → 温暖收尾' },
+  恶: { essence: '对标准的坚守', trigger: '她有底线', peak: '被筛选是一种认可', style: '冷静、笃定、不讨好', scene: '深色 / 中性色、干练简约、中性光', format: '说不服务谁 → 说为什么 → 说我服务谁' },
+  欲: { essence: '对更好状态的向往', trigger: '我也想活成这样', peak: '我也可以走这条路', style: '从容、松弛、有质感', scene: '有质感色系、有设计感、自然光 / 暖光', format: '展示状态 → 说路径 → 给行动' }
+};
+
+const mbtiInsights = {
+  ENFJ: ['爱、喜、欲', '陪伴型、结果型、向往型', '感染力强、会讲故事、能带动情绪', '恶（筛选）、惧（痛点）'],
+  ENFP: ['喜、欲、爱', '结果型、向往型、陪伴型', '热情、有能量、能制造向往', '恶、惧'],
+  ENTJ: ['恶、怒、喜', '筛选型、立场型、结果型', '气场强、有权威感、敢说真话', '爱、哀'],
+  ENTP: ['怒、喜、欲', '立场型、结果型、向往型', '观点犀利、逻辑强、能破圈', '爱、哀'],
+  ESFJ: ['爱、喜、哀', '陪伴型、结果型、故事型', '亲和、温暖、让人信任', '恶、怒'],
+  ESFP: ['喜、欲、爱', '结果型、向往型、陪伴型', '表现力强、有感染力', '恶、惧'],
+  ESTJ: ['恶、怒、喜', '筛选型、立场型、结果型', '权威、务实、有结果', '爱、哀'],
+  ESTP: ['怒、喜、欲', '立场型、结果型、向往型', '直接、有冲击力、敢做敢说', '爱、哀'],
+  INFJ: ['爱、哀、喜', '陪伴型、故事型、结果型', '深度共情、有洞察力', '恶、怒'],
+  INFP: ['哀、爱、欲', '故事型、陪伴型、向往型', '真实、有灵魂、能打动人', '恶、怒'],
+  INTJ: ['恶、惧、喜', '筛选型、痛点型、结果型', '战略思维、能看透本质', '爱、哀'],
+  INTP: ['惧、恶、喜', '痛点型、筛选型、结果型', '逻辑严密、能讲透问题', '爱、哀'],
+  ISFJ: ['爱、哀、喜', '陪伴型、故事型、结果型', '温暖、可靠、有耐心', '恶、怒'],
+  ISFP: ['哀、爱、欲', '故事型、陪伴型、向往型', '真诚、有审美、能共情', '恶、怒'],
+  ISTJ: ['惧、恶、喜', '痛点型、筛选型、结果型', '严谨、可信、有体系', '爱、哀'],
+  ISTP: ['惧、怒、恶', '痛点型、立场型、筛选型', '冷静、直接、解决问题', '爱、哀']
+};
+
+const industryRecipes = [
+  ['喜', '欲、爱', '怒、恶'],
+  ['喜', '爱、惧', '怒、恶'],
+  ['爱', '哀、喜', '怒、恶、惧'],
+  ['惧', '喜、怒', '哀、爱'],
+  ['爱', '哀、喜', '怒、恶'],
+  ['惧', '恶、怒', '哀、爱'],
+  ['惧', '喜、恶', '哀、爱'],
+  ['怒', '恶、喜', '哀、爱'],
+  ['怒', '恶、喜', '爱、哀']
+];
+
+const priceStrategies = [
+  ['爱', '哀、惧', '低门槛，靠陪伴、共情和紧迫感成交', '陪伴型、故事型、痛点型'],
+  ['喜', '欲、爱', '中门槛，靠结果、向往和陪伴成交', '结果型、向往型、陪伴型'],
+  ['恶', '怒、喜', '高门槛，靠筛选、立场和结果成交', '筛选型、立场型、结果型'],
+  ['恶', '怒', '高端门槛，靠“不服务谁”和实力成交', '筛选型、立场型'],
+  ['恶', '怒、喜', '超高门槛，靠筛选、立场和结果背书成交', '筛选型、立场型、结果型']
+];
+
+const audienceStrategies = {
+  gender: [
+    ['爱、喜', '哀、惧', '先共情，再给希望，最后用紧迫感成交'],
+    ['恶、怒', '喜、惧', '先亮态度，再晒结果，最后用筛选建高端'],
+    ['喜、恶', '爱、怒', '用结果吸引，用筛选建立标准']
+  ],
+  age: [
+    ['喜、欲', '怒、爱', '给希望、给向往，用结果说话'],
+    ['惧、恶', '喜、怒', '制造紧迫感，用筛选建信任'],
+    ['爱、哀', '喜、惧', '先共情，再给解法，用案例建信任'],
+    ['爱、喜', '哀、惧', '陪伴加结果，用真实案例打动']
+  ],
+  profession: [
+    ['恶、怒', '喜、惧', '亮底线、晒结果，用筛选建高端'],
+    ['惧、喜', '爱、恶', '制造紧迫，用结果和陪伴成交'],
+    ['喜、欲', '怒、爱', '给希望、给向往，用立场建人设'],
+    ['爱、哀', '喜、惧', '先共情，再给希望，用陪伴成交'],
+    ['喜、欲', '怒、爱', '给希望、给路径，用结果吸引']
+  ],
+  income: [
+    ['爱、惧', '哀、喜', '用陪伴建立信任，用紧迫感推动决策'],
+    ['喜、爱', '欲、惧', '用结果给希望，用陪伴拉距离'],
+    ['恶、喜', '怒、惧', '用筛选建高端，用结果做背书'],
+    ['恶、怒', '喜', '用“不服务谁”建门槛，用结果做信任']
+  ]
+};
+
+const barrierStrategies = [
+  ['喜', '看到真实案例、结果', '结果型'],
+  ['爱', '看到有人陪、有人带', '陪伴型'],
+  ['恶、怒', '看到你的底线和原则', '筛选型、立场型'],
+  ['惧', '看到“现在就是最好时机”', '痛点型'],
+  ['恶', '看到“贵有贵的道理”', '筛选型'],
+  ['爱、哀', '看到“很多人都这样走过来了”', '陪伴型、故事型'],
+  ['恶', '看到你“不服务谁”的边界', '筛选型'],
+  ['怒', '看到你“和别人不一样”', '立场型'],
+  ['惧、欲', '看到“现在不报的代价”', '痛点型、向往型']
+];
+
 const baseQuestions = [
   ['行业与产品', '你的行业赛道是？', [['美业 / 护肤 / 穿搭 / 医美', '喜+2，欲+1，爱+1'], ['大健康 / 养生 / 营养 / 中医', '喜+1，爱+1，惧+1'], ['疗愈 / 心理咨询 / 身心灵', '爱+2，哀+1，喜+1'], ['教育 / 教培 / 学科辅导', '惧+2，喜+1，怒+1'], ['心理学 / 情感咨询 / 婚姻修复', '爱+2，哀+2'], ['律师 / 法律咨询', '惧+1，恶+1，怒+1'], ['保险 / 理财 / 财富管理', '惧+2，喜+1，恶+1'], ['工厂老板 / 实体老板 / 传统企业主', '怒+1，恶+1，喜+1'], ['IP知识付费教学 / 操盘手 / 自媒体教练', '怒+2，恶+1，喜+1'], ['其他行业', '根据产品判断']], 'multi', 2],
   ['行业与产品', '你的核心产品主要帮用户解决什么？', [['帮人赚钱 / 提升收入', '怒+2，恶+1，喜+1'], ['帮人变美 / 变好 / 变健康', '喜+2，欲+1，爱+1'], ['帮人安心 / 缓解焦虑 / 疗愈', '爱+2，哀+1'], ['帮人省时间 / 避坑 / 少走弯路', '惧+1，怒+1，恶+1']], 'multi', 2],
@@ -61,7 +149,7 @@ const scoreFromText = text => { const result = {}; [...text.matchAll(/([怒喜�
 
 function show(id) { ['introView', 'quizView', 'resultView'].forEach(view => $(view).classList.toggle('hidden', view !== id)); }
 function showToast(message) { const toast = $('toast'); toast.textContent = message; toast.classList.add('visible'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('visible'), 2400); }
-function makeShareUrl(includeAnswers = false) { const url = new URL(window.location.href); url.hash = ''; if (includeAnswers) url.searchParams.set('answers', answers.map(selection => selection.length ? selection.reduce((mask, index) => mask | (1 << index), 0) : 'x').join('.')); return url.toString(); }
+function makeShareUrl(includeAnswers = false) { const url = new URL(window.location.href); url.hash = ''; if (includeAnswers) { url.search = ''; url.searchParams.set('answers', answers.map(selection => selection.length ? selection.reduce((mask, index) => mask | (1 << index), 0) : 'x').join('.')); } return url.toString(); }
 async function shareUrl(url, message) { try { if (navigator.share) { await navigator.share({ title: '创始人 IP 情绪风格测评', text: message, url }); } else { await navigator.clipboard.writeText(url); showToast('分享链接已复制，发给学员即可'); } } catch (error) { if (error.name !== 'AbortError') { try { await navigator.clipboard.writeText(url); showToast('分享链接已复制'); } catch (clipboardError) { showToast('请复制浏览器地址栏链接分享'); } } } }
 function openShareModal() { const url = makeShareUrl(); $('shareUrlInput').value = url; $('shareQrImage').src = `https://quickchart.io/qr?size=260&margin=2&text=${encodeURIComponent(url)}`; $('shareModal').classList.remove('hidden'); document.body.classList.add('modal-open'); }
 function closeShareModal() { $('shareModal').classList.add('hidden'); document.body.classList.remove('modal-open'); }
@@ -70,16 +158,71 @@ function downloadQr() { const link = document.createElement('a'); link.download 
 function loadSharedResult() { const encoded = new URLSearchParams(window.location.search).get('answers'); if (!encoded || !/^[0-9x]+(?:\.[0-9x]+)*$/.test(encoded)) return false; const tokens = encoded.includes('.') ? encoded.split('.') : [...encoded]; if (tokens.length !== questions.length) return false; if (tokens.some((token, index) => token !== 'x' && Number(token) > (1 << questions[index][2].length) - 1)) return false; answers = tokens.map((token, index) => { if (token === 'x') return []; const mask = Number(token); return Array.from({ length: questions[index][2].length }, (_, optionIndex) => optionIndex).filter(optionIndex => mask & (1 << optionIndex)); }); renderResults(); show('resultView'); $('headerStatus').textContent = '已打开分享结果'; return true; }
 function renderQuestion() {
   const [section, title, options, mode, maxSelection] = questions[current];
-  $('sectionLabel').textContent = `${section}`;
+  const optional = current >= questions.length - 2;
+  const sectionLabel = current < 8 ? '第一部分 · MBTI 快速测评' : current < 12 ? '第二部分 · 行业与产品' : current < 16 ? '第三部分 · 用户画像' : current < 19 ? '第四部分 · 用户心理' : current < 25 ? '第五部分 · 情景反应' : current < 31 ? '第六部分 · 个人特质' : '第七部分 · 八字五行（可选）';
+  $('sectionLabel').textContent = sectionLabel;
   $('questionTitle').textContent = title; $('currentNumber').textContent = String(current + 1).padStart(2, '0'); $('progressBar').style.width = `${((current + 1) / questions.length) * 100}%`; $('skipHint').textContent = mode === 'single' ? '单选题 · 请选择最符合的一项' : `多选题 · 最多选择 ${maxSelection} 项`;
+  const modeLabel = mode === 'single' ? '单选题' : maxSelection === 2 ? '双选题 · 最多 2 项' : '多选题 · 最多 ' + maxSelection + ' 项';
+  $('questionMode').textContent = optional ? '可选 · ' + modeLabel : modeLabel;
+  if (optional) $('skipHint').textContent = '可选题 · 不填写也可以继续';
   $('options').innerHTML = options.map((option, index) => `<div class="option ${answers[current].includes(index) ? 'selected' : ''}" data-index="${index}"><span class="option-letter">${answers[current].includes(index) ? '✓' : String.fromCharCode(65 + index)}</span><div class="option-copy"><strong>${option[0]}</strong></div></div>`).join('');
   document.querySelectorAll('.option').forEach(option => option.addEventListener('click', () => { const index = Number(option.dataset.index); const selected = answers[current]; if (selected.includes(index)) answers[current] = selected.filter(item => item !== index); else if (mode === 'single') answers[current] = [index]; else if (selected.length < maxSelection) answers[current] = [...selected, index]; else { showToast(`本题最多选择 ${maxSelection} 项`); return; } renderQuestion(); }));
-  $('prevButton').disabled = current === 0; $('nextButton').disabled = answers[current].length === 0; $('nextButton').innerHTML = current === questions.length - 1 ? '查看结果 <span>↗</span>' : '下一题 <span>→</span>';
+  $('prevButton').disabled = current === 0; $('nextButton').disabled = !optional && answers[current].length === 0; $('nextButton').innerHTML = current === questions.length - 1 ? '查看结果 <span>↗</span>' : optional ? '下一题（可跳过） <span>→</span>' : '下一题 <span>→</span>';
 }
 function calculate() { const total = scores(); const mbti = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 }; answers.forEach((selection, questionIndex) => selection.forEach(answer => { const scoreText = questions[questionIndex][2][answer][1]; Object.entries(scoreFromText(scoreText)).forEach(([emotion, value]) => { total[emotion] += value; }); [...scoreText.matchAll(/([ESNTFJIP])\+1/g)].forEach(match => { if (mbti[match[1]] !== undefined) mbti[match[1]] += 1; }); })); mbtiType = `${mbti.E >= mbti.I ? 'E' : 'I'}${mbti.S >= mbti.N ? 'S' : 'N'}${mbti.T >= mbti.F ? 'T' : 'F'}${mbti.J >= mbti.P ? 'J' : 'P'}`; return Object.entries(total).sort((a, b) => b[1] - a[1]); }
+function renderAdvancedInsights(primary, support, ranked) {
+  const guide = emotionGuides[primary];
+  const mbti = mbtiInsights[mbtiType] || ['喜、爱', '结果型、陪伴型', '真实、稳定、容易建立信任', '恶、惧'];
+  const avoid = ranked.slice(-2).map(item => item[0]).join('、');
+  const ratio = primary + ' 60% + ' + support[0] + ' 25% + ' + support[1] + ' 15%';
+
+  $('executionGrid').innerHTML = [
+    '<article class="execution-card execution-primary"><span class="card-kicker">主情绪 · ' + primary + '</span><h4>' + emotions[primary].type + '怎么拍</h4><p>' + guide.format + '</p><small>' + guide.style + ' · ' + guide.scene + '</small></article>',
+    '<article class="execution-card"><span class="card-kicker">MBTI · ' + mbtiType + '</span><h4>你的天然优势</h4><p>' + mbti[2] + '</p><small>适合：' + mbti[1] + '；建议练习：' + mbti[3] + '</small></article>',
+    '<article class="execution-card"><span class="card-kicker">CONTENT MIX</span><h4>一周内容配方</h4><p>' + ratio + '</p><small>先用主情绪建立识别度，再用辅助情绪完成信任与转化。</small></article>'
+  ].join('');
+
+  const industryHTML = answers[8].map(index => {
+    const recipe = industryRecipes[index] || [primary, support.join('、'), avoid];
+    return '<article class="cross-card"><span class="card-kicker">行业配方</span><strong>' + questions[8][2][index][0] + '</strong><p>主情绪：' + recipe[0] + '　辅助：' + recipe[1] + '<br>尽量避开：' + recipe[2] + '</p></article>';
+  }).join('') || '<article class="cross-card"><span class="card-kicker">行业配方</span><strong>按你的情绪得分生成</strong><p>主情绪：' + primary + '　辅助：' + support.join('、') + '</p></article>';
+
+  const priceHTML = answers[10].map(index => {
+    const strategy = priceStrategies[index];
+    return strategy ? '<article class="cross-card"><span class="card-kicker">客单价策略</span><strong>' + questions[10][2][index][0] + '</strong><p>主情绪：' + strategy[0] + '　辅助：' + strategy[1] + '<br>' + strategy[2] + '<br>视频：' + strategy[3] + '</p></article>' : '';
+  }).join('');
+
+  const audienceGroups = [
+    ['用户性别', 12, audienceStrategies.gender],
+    ['用户年龄', 13, audienceStrategies.age],
+    ['用户职业', 14, audienceStrategies.profession],
+    ['用户收入', 15, audienceStrategies.income]
+  ];
+  const audienceHTML = audienceGroups.reduce((html, group) => {
+    const label = group[0]; const questionIndex = group[1]; const table = group[2];
+    return html + answers[questionIndex].map(index => {
+      const strategy = table[index];
+      return strategy ? '<article class="cross-card"><span class="card-kicker">' + label + '</span><strong>' + questions[questionIndex][2][index][0] + '</strong><p>主情绪：' + strategy[0] + '　辅助：' + strategy[1] + '<br>' + strategy[2] + '</p></article>' : '';
+    }).join('');
+  }, '');
+
+  const barrierHTML = answers[18].map(index => {
+    const strategy = barrierStrategies[index];
+    return strategy ? '<article class="cross-card"><span class="card-kicker">付费障碍</span><strong>' + questions[18][2][index][0] + '</strong><p>用 ' + strategy[0] + '，让用户看到：' + strategy[1] + '<br>适合：' + strategy[2] + '</p></article>' : '';
+  }).join('');
+  $('crossInsightGrid').innerHTML = '<div class="cross-group"><div class="cross-group-heading"><p class="eyebrow">AUDIENCE × EMOTION</p><h3>用户画像交叉分析</h3></div><div class="cross-card-grid">' + audienceHTML + '</div></div><div class="cross-group"><div class="cross-group-heading"><p class="eyebrow">BUSINESS × EMOTION</p><h3>行业、客单价与成交策略</h3></div><div class="cross-card-grid">' + industryHTML + priceHTML + barrierHTML + '</div></div>';
+
+  $('emotionGuideGrid').innerHTML = Object.keys(emotionGuides).map(emotion => {
+    const item = emotionGuides[emotion];
+    return '<article class="emotion-guide-card"><div class="emotion-guide-top"><span class="emotion-symbol">' + emotion + '</span><div><strong>' + emotions[emotion].type + '</strong><small>' + item.essence + '</small></div></div><p>用户触动：' + item.trigger + '</p><p>最高层次：' + item.peak + '</p><div class="guide-meta"><span>' + item.style + '</span><span>' + item.format + '</span></div></article>';
+  }).join('');
+  queueMicrotask(() => document.querySelectorAll('.advice-item span').forEach(item => { item.textContent = item.textContent.replace(/，建议[^。]+。$/, '。'); }));
+}
 function renderResults() {
   const ranked = calculate(); const primary = ranked[0][0]; const support = ranked.slice(1, 3).map(item => item[0]); const avoid = ranked.slice(-2).map(item => item[0]); const max = ranked[0][1] || 1;
-  $('dominantEmotion').textContent = primary; $('dominantType').textContent = emotions[primary].type; $('dominantSummary').textContent = `${emotions[primary].advice}。你的内容首先要让用户感受到${emotions[primary].purpose.replace('建立人设、', '').replace('、替用户说话', '')}。`; $('dominantScore').textContent = `得分 ${ranked[0][1]}`; $('dominantFrequency').textContent = emotions[primary].frequency;
+  renderAdvancedInsights(primary, support, ranked);
+  $('completionCopy').textContent = '完成度 ' + Math.round(answers.slice(0, -2).filter(selection => selection.length).length / (questions.length - 2) * 100) + '%';
+  $('dominantEmotion').textContent = primary; $('dominantType').textContent = emotions[primary].type; $('dominantSummary').textContent = `${emotions[primary].advice}。你的内容首先要让用户感受到${emotions[primary].purpose.replace('建立人设、', '').replace('、替用户说话', '')}。`; $('dominantScore').textContent = `得分 ${ranked[0][1]}`; $('dominantPurpose').textContent = emotions[primary].purpose;
   $('resultTitle').textContent = `${primary} × ${support.join(' × ')} 配方`; $('resultSubtitle').textContent = `${emotions[primary].type}为主，${emotions[support[0]].type}与${emotions[support[1]].type}辅助`;
   $('scoreBars').innerHTML = ranked.map(([emotion, score]) => `<div class="score-bar-row"><strong>${emotion}</strong><div class="score-bar-track"><div class="score-bar-fill" style="width:${Math.max(5, score / max * 100)}%"></div></div><span>${score}</span></div>`).join('');
   $('primaryEmotion').textContent = `${primary} · ${emotions[primary].type}`; $('supportEmotions').textContent = support.map(emotion => `${emotion} · ${emotions[emotion].type}`).join(' + '); $('contentRatio').textContent = '60% + 25% + 15%';
@@ -104,3 +247,30 @@ function downloadResult() {
 }
 
 ensureResultLayout(); $('startButton').addEventListener('click', () => { current = 0; answers = Array.from({ length: questions.length }, () => []); show('quizView'); $('headerStatus').textContent = '正在测评'; renderQuestion(); }); $('prevButton').addEventListener('click', () => { if (current > 0) { current--; renderQuestion(); } }); $('nextButton').addEventListener('click', () => { if (current < questions.length - 1) { current++; renderQuestion(); } else { renderResults(); show('resultView'); window.scrollTo({ top: 0, behavior: 'smooth' }); } }); $('restartButton').addEventListener('click', () => { show('introView'); $('headerStatus').textContent = '准备开始'; window.history.replaceState({}, '', window.location.pathname); window.scrollTo({ top: 0, behavior: 'smooth' }); }); $('saveImageButton').addEventListener('click', downloadResult); loadSharedResult();
+
+function refreshIntroCopy() {
+  const description = document.querySelector('.intro-description');
+  const note = document.querySelector('.micro-note');
+  const legacyFrequency = $('dominantFrequency');
+  if (legacyFrequency) {
+    legacyFrequency.id = 'dominantPurpose';
+    legacyFrequency.textContent = '';
+  }
+  if (description) description.textContent = '用情绪表达做爆款，让更多人看到你；用信任表达做成交，让更多人选择你。通过 MBTI、七情情绪和用户画像，找到适合你的短视频表达风格与拍摄方向。';
+  if (note) note.textContent = '33 题 · 约 10 分钟 · 含 2 题可选';
+}
+
+function ensureShareAction() {
+  const resultActions = document.querySelector('.result-actions');
+  const restartButton = $('restartButton');
+  if (!resultActions || !restartButton || $('shareResultButton')) return;
+  const shareButton = document.createElement('button');
+  shareButton.id = 'shareResultButton';
+  shareButton.className = 'button button-ghost';
+  shareButton.innerHTML = '分享我的结果 <span>↗</span>';
+  shareButton.addEventListener('click', () => shareUrl(makeShareUrl(true), '这是我的创始人 IP 情绪风格测评结果，打开链接即可查看。'));
+  resultActions.insertBefore(shareButton, restartButton);
+}
+
+refreshIntroCopy();
+ensureShareAction();
