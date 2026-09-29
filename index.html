@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>创始人IP情绪风格测评</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark"><span>IP</span><div><strong>情绪风格</strong><small>FOUNDER SIGNALS</small></div></div>
+      <div class="top-meta"><span class="status-dot"></span><span id="headerStatus">准备开始</span></div>
+    </header>
+
+    <section id="introView" class="view intro-view">
+      <div class="intro-copy">
+        <p class="eyebrow">FOUNDER IP / EMOTIONAL POSITIONING</p>
+        <h1>你的内容，<br><em>应该先让人感受到什么？</em></h1>
+        <p class="intro-description">用情绪表达做爆款，用信任表达做成交。10 分钟找到属于你的情绪配方、内容比例和可直接执行的视频方向。</p>
+        <div class="intro-actions"><button id="startButton" class="button button-primary">开始测评 <span>→</span></button><span class="micro-note">15 题 · 约 10 分钟 · 单选与多选</span></div>
+        <div class="intro-orbit" aria-hidden="true">
+          <div class="orbit-ring ring-one"></div><div class="orbit-ring ring-two"></div>
+          <div class="orbit-core"><span>情绪</span><strong>配方</strong></div>
+          <div class="orbit-label label-anger">怒 · 立场</div><div class="orbit-label label-joy">喜 · 结果</div><div class="orbit-label label-love">爱 · 陪伴</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quizView" class="view quiz-view hidden">
+      <div class="quiz-header"><div><p id="sectionLabel" class="eyebrow">第一部分 · MBTI 快速测评</p><h2 id="questionTitle">周末你更倾向于？</h2></div><div class="question-count"><strong id="currentNumber">01</strong><span>/ 33</span></div></div>
+      <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      <div id="options" class="options"></div>
+      <div class="quiz-footer"><button id="prevButton" class="button button-ghost" disabled>← 上一题</button><span id="skipHint" class="skip-hint">可选择多个最贴近真实情况的选项</span><button id="nextButton" class="button button-dark" disabled>下一题 <span>→</span></button></div>
+    </section>
+
+    <section id="resultView" class="view result-view hidden">
+      <div class="result-heading"><div><p class="eyebrow">YOUR EMOTIONAL FORMULA</p><h2>这就是你的创始人信号</h2><p>把真实的你，变成用户能持续感受到的内容气质。</p></div><div class="result-actions"><button id="saveImageButton" class="button button-primary">保存结果图片 <span>↗</span></button><button id="restartButton" class="button button-ghost">重新测评</button></div></div>
+      <div id="dominantResult" class="dominant-result">
+        <div class="dominant-orb"><span id="dominantEmotion">怒</span><small>主情绪</small></div>
+        <div class="dominant-copy"><p class="eyebrow">YOUR DOMINANT SIGNAL</p><h3><strong id="dominantType">立场型</strong>人格</h3><p id="dominantSummary">你最适合用清晰的立场和边界，让用户迅速记住你。</p><div class="dominant-meta"><span id="dominantScore">得分 0</span><span id="dominantFrequency">每周 1–2 条</span></div></div>
+        <div class="dominant-badge">TOP<br><strong>01</strong></div>
+      </div>
+      <div id="resultCard" class="result-card">
+        <div class="result-card-top"><div><span class="card-kicker">FOUNDER IP PROFILE</span><h3 id="resultTitle">正在生成...</h3><p id="resultSubtitle"></p></div><div class="score-stamp">IP<br><strong>07</strong></div></div>
+        <div id="scoreBars" class="score-bars"></div>
+        <div class="recipe-row"><div><span>主情绪</span><strong id="primaryEmotion"></strong></div><div><span>辅助情绪</span><strong id="supportEmotions"></strong></div><div><span>内容配比</span><strong id="contentRatio"></strong></div></div>
+      </div>
+      <div class="result-highlights"><div class="highlight-card"><span class="highlight-icon">✦</span><div><strong id="completionCopy">完成度 100%</strong><small>你的回答已形成完整画像</small></div></div><div class="highlight-card"><span class="highlight-icon">◎</span><div><strong id="signalCopy">情绪信号清晰</strong><small>内容表达具有稳定识别度</small></div></div><div class="highlight-card"><span class="highlight-icon">↗</span><div><strong>可直接执行</strong><small>已有明确的视频内容方向</small></div></div></div>
+      <div class="emotion-tags"><span class="eyebrow">YOUR SIGNAL TAGS</span><div id="emotionTags" class="tag-list"></div></div>
+      <div class="result-grid"><article class="insight-panel"><p class="eyebrow">CONTENT DIRECTION</p><h3>你的内容应该这样说</h3><div id="contentAdvice"></div></article><article class="insight-panel"><p class="eyebrow">AVOID THE NOISE</p><h3>适度避开</h3><p id="avoidAdvice"></p><div class="action-line"><span>下一步</span><strong>把主情绪写进你的选题表</strong></div></article></div>
+      <div class="profile-section"><div class="profile-heading"><div><p class="eyebrow">ARCHIVE CARD</p><h3>IP 情绪风格档案卡</h3></div></div><div id="profileGrid" class="profile-grid"></div></div>
+    </section>
+  </main>
+  <footer><span>创始人 IP 情绪风格测评</span><span>Make your signal unmistakable.</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js?v=20260929-share"></script>
+</body>
+</html>
