@@ -138,6 +138,57 @@ body.modal-open { overflow: hidden; }
   .emotion-guide-heading { margin-top: 34px; }
 }
 
+/* Final conversion block on the result report. */
+.result-cta {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 205px;
+  align-items: center;
+  gap: 32px;
+  margin-top: 64px;
+  padding: 40px 46px;
+  overflow: hidden;
+  color: white;
+  background: linear-gradient(125deg, #2b1d43, #6d43d9 64%, #a84bd8);
+  border-radius: 24px;
+  box-shadow: 0 22px 56px #6d43d933;
+}
+.result-cta:after {
+  content: '';
+  position: absolute;
+  width: 390px;
+  height: 390px;
+  right: -155px;
+  top: -205px;
+  border: 1px solid #ffffff38;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.result-cta-copy { padding-left: 8px; }
+.result-cta-copy,
+.result-cta-qr { position: relative; z-index: 1; }
+.result-cta-copy .eyebrow { margin-bottom: 13px; color: #ddc9ff; }
+.result-cta h3 { margin: 0 0 15px; font: 600 30px/1.4 var(--serif); }
+.result-cta-title-line { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; font-size: clamp(17px, 2.7vw, 30px); letter-spacing: -.03em; }
+.result-cta-subtitle { margin: 0 0 20px; color: #eee6fa; font-size: 15px; line-height: 1.8; }
+.result-cta-offer { margin: 0; color: var(--lime); font-size: 15px; font-weight: 700; line-height: 1.9; }
+.result-cta-offer-line { display: inline-block; max-width: 100%; overflow: hidden; white-space: nowrap; font-size: clamp(10px, 2.7vw, 15px); letter-spacing: -.03em; }
+.result-cta-offer .cta-plus { color: white; font-size: 1.16em; font-weight: 800; }
+.result-cta-qr { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.result-cta-qr img { display: block; width: 195px; height: 195px; padding: 9px; object-fit: contain; background: white; border-radius: 18px; box-shadow: 0 12px 30px #211b3240; }
+.result-cta-qr small { color: #eadfff; font-size: 11px; letter-spacing: .04em; }
+@media (max-width: 700px) {
+  .result-cta { grid-template-columns: minmax(0, 1fr) 124px; gap: 14px; margin-top: 42px; padding: 24px 16px 26px; text-align: left; border-radius: 20px; }
+  .result-cta-copy { padding-left: 4px; }
+  .result-cta h3 { font-size: 24px; }
+  .result-cta-title-line { font-size: clamp(12px, 4vw, 18px); }
+  .result-cta-subtitle, .result-cta-offer { font-size: 13px; }
+  .result-cta-offer-line { font-size: clamp(7px, 2.3vw, 10px); }
+  .result-cta-qr { align-self: center; }
+  .result-cta-qr img { width: 120px; height: 120px; padding: 6px; border-radius: 12px; }
+  .result-cta-qr small { font-size: 8px; white-space: nowrap; }
+}
+
 /* Homepage layout polish: one stable layout for desktop and mobile. */
 .intro-view {
   display: block;

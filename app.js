@@ -269,6 +269,9 @@ function renderResultWithSvg(result, width, height, scale) {
     clone.style.maxWidth = 'none';
     clone.style.margin = '0';
     clone.style.animation = 'none';
+    clone.querySelectorAll('img[src]').forEach(image => {
+      image.setAttribute('src', new URL(image.getAttribute('src'), document.baseURI).href);
+    });
 
     const bodyStyle = getComputedStyle(document.body);
     const exportRoot = document.createElement('div');
