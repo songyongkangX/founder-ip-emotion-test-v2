@@ -171,7 +171,7 @@ body.modal-open { overflow: hidden; }
 .result-cta h3 { margin: 0 0 15px; font: 600 30px/1.4 var(--serif); }
 .result-cta-title-line { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; font-size: clamp(17px, 2.7vw, 30px); letter-spacing: -.03em; }
 .result-cta-subtitle { margin: 0 0 20px; color: #eee6fa; font-size: 15px; line-height: 1.8; }
-.result-cta-offer { margin: 0; color: var(--lime); font-size: 15px; font-weight: 700; line-height: 1.9; }
+.result-cta-offer { margin: 0; color: var(--lime); font-size: 20px; font-weight: 700; line-height: 1.9; }
 .result-cta-offer-line { display: inline-block; max-width: 100%; overflow: hidden; white-space: nowrap; font-size: clamp(10px, 2.7vw, 15px); letter-spacing: -.03em; }
 .result-cta-offer .cta-plus { color: white; font-size: 1.16em; font-weight: 800; }
 .result-cta-qr { display: flex; flex-direction: column; align-items: center; gap: 10px; }
